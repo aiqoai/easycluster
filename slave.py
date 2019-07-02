@@ -5,7 +5,7 @@ def slave():
     # Setup ZMQ.
     context = zmq.Context()
     sock = context.socket(zmq.REQ)
-    sock.connect("tcp://192.168.196.1:5557") # IP of master
+    sock.connect("tcp://127.0.0.1:5557") # IP of master
 
     while True:
         # Say we're available.
@@ -17,7 +17,7 @@ def slave():
             continue
         p = work['p']
         q = work['q']
-        print "running computation p=%d, q=%d" % (p, q)
+        print( "running computation p=%d, q=%d" % (p, q))
         result = run_computation(p, q)
 
         # We have a result, let's inform the master about that, and receive the
@@ -28,7 +28,9 @@ def slave():
 # Delegate the hard work to the C++ binary and retrieve its results from the
 # standard output.
 def run_computation(p, q):
-    return subprocess.check_output(["./think", str(p), str(q)])
+    return p+q #subprocess.check_output(["./think", str(p), str(q)])
 
 if __name__ == "__main__":
+    print("slave start")
     slave()
+    print("slave done")

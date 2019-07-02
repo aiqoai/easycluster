@@ -29,31 +29,34 @@ def master(p_range, q_range):
             send_thanks(sock)
 
     # Results are all in.
-    print "=== Results ==="
+    print( "=== Results ===")
     for r in results:
-        print r
+        print (r)
 
 def generate_works(p_range, q_range):
     # We want to span all (p, q) combinations.
     for p in p_range:
         for q in q_range:
             work = { 'p' : p, 'q': q };
-            print "sending work p=%f, q=%f..." % (p, q)
+            print ("sending work p=%f, q=%f..." % (p, q))
             yield work
 
 def send_next_work(sock, works):
     try:
-        work = works.next()
+        work = next(works)#.next()
+        print(f" next work: {work}")
         sock.send_json(work)
-    except StopIteration:
+    except StopIteration as e:
+        print(e)
         # If no more work is available, we still have to reply something.
         sock.send_json({})
 
 def send_thanks(sock):
-    sock.send("") # Nothing more to say actually
+    sock.send_string(" thanks ") # Nothing more to say actually
 
 if __name__ == "__main__":
-    p_range = [pow(10, n) for n in xrange(-6, 6)] # All values for the first parameter
-    q_range = [pow(10, n) for n in xrange(-6, 6)] # All values for the second parameter
-
+    p_range = [pow(10, n) for n in range(-6, 6,1)] # All values for the first parameter
+    q_range = [pow(10, n) for n in range(-6, 6,1)] # All values for the second parameter
+    print("stated")
     master(p_range, q_range)
+    print(" running")
